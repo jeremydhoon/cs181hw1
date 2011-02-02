@@ -1,0 +1,8 @@
+*~
+*.pyc
+*.pdf
+*.aux
+*.log
+*.out
+.DS_Store
+*.tar.gz
