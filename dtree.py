@@ -48,8 +48,8 @@ def compute_entropy(dblWeightTrue,dblWeightFalse):
 def separate_by_attribute(listInst, ixAttr):
     """Build a dictionary mapping attribute values to lists of instances.
     
-    >>> separate_by_attribute([Instance([0,0],True),Instance([1,0],True)], 0)
-    {0: [Instance([0, 0], True)], 1: [Instance([1, 0], True)]}
+    >>> separate_by_attribute([Instance([5,0],True),Instance([9,0],True)], 0)
+    {9: [Instance([9, 0], True)], 5: [Instance([5, 0], True)]}
     """
     dictInst = {}
     for inst in listInst:
