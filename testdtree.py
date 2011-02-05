@@ -427,7 +427,8 @@ class CrossValidationTest(unittest.TestCase):
                     dblWeight += inst.dblWeight
             return dblWeight
         cValues = 4
-        fxnGen = build_consistent_generator(cValues=cValues)
+        fxnGen = build_consistent_generator(cValues=cValues,
+                                            fxnGenWeight=random.random)
         cInst = random.randint(30,60)
         listLeft = fxnGen(cInst)
         listRight = [dtree.Instance([cAttr+cValues+1
@@ -435,11 +436,13 @@ class CrossValidationTest(unittest.TestCase):
                               inst.fLabel) for inst in fxnGen(cInst)]
         fMajL = dtree.majority_label(listLeft)
         fMajR = dtree.majority_label(listRight)
-        iterableFolds = dtree.yield_cv_folds(listLeft + listRight, 2)
+        iterableFolds = [dtree.TreeFold(listLeft,listRight),
+                         dtree.TreeFold(listRight,listLeft)]
         dblScore = dtree.cv_score(iterableFolds)
         dblL = label_weight(listRight, fMajL)
         dblR = label_weight(listLeft, fMajR)
-        self.assertAlmostEqual((dblL + dblR)/(2.0*cInst), dblScore)
+        dblTotalWeight = sum([inst.dblWeight for inst in listRight + listLeft])
+        self.assertAlmostEqual((dblL + dblR)/dblTotalWeight, dblScore)
 
     @repeated
     def test_yield_cv_folds_with_validation(self):
