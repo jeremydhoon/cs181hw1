@@ -398,7 +398,7 @@ def is_valid_cvf_builder(fxnBuildCvf, fxnCheckEach):
     listInst,cFold = build_foldable_instances()
     setI = build_folded_set(listInst)
     cFoldsYielded = 0
-    for cvf in fxnBuildCvf(listInst,cFold):
+    for cvf in fxnBuildCvf(list(listInst),cFold):
         if not fxnCheckEach(cvf):
             return False
         setTrain = build_folded_set(cvf.listInstTraining)
