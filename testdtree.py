@@ -20,22 +20,22 @@ def randbool(dblP=0.5):
     return random.random() < dblP
 
 def randlist(lo,hi,n):
-    return map(lambda x: x(lo,hi), [random.randint]*n)        
+    return map(lambda x: x(lo,hi), [random.randint]*n)
+
+def build_one_instance(cAttrs,cValues,fxnGenWeight,fxnGenLabel):
+    listAttrs = randlist(0,cValues-1,cAttrs)
+    return dtree.Instance(listAttrs, fxnGenLabel(listAttrs), fxnGenWeight())
 
 def build_instance_generator(dblLabelDist=0.5,cAttrs=10, cValues=4,
                              fxnGenWeight=None, fxnGenLabel=None):
     if fxnGenWeight is None:
         fxnGenWeight = lambda: 1.0
+    if fxnGenLabel is None:
+        fxnGenLabel = lambda _: randbool(dblLabelDist)
     def build_instances(n=1):
-        listInst = []
-        for _ in xrange(n):
-            listAttrs = randlist(0,cValues-1,cAttrs)
-            if fxnGenLabel is None:
-                fLbl = randbool(dblLabelDist)
-            else:
-                fLbl = fxnGenLabel(listAttrs)
-            listInst.append(dtree.Instance(listAttrs, fLbl, fxnGenWeight()))
-        return listInst
+        build1 = lambda: build_one_instance(cAttrs,cValues,fxnGenWeight,
+                                            fxnGenLabel)
+        return [build1() for _ in xrange(n)]
     build_instances.cAttrs = cAttrs
     build_instances.cValues = cValues
     return build_instances
