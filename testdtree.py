@@ -209,7 +209,10 @@ class ConstructionTest(unittest.TestCase):
              for _ in xrange(random.randint(*pairBounds))])
         listInst = build_list_inst_bool(True) + build_list_inst_bool(False)
         setIxAttr = set(range(2))
+        cPrevSetIxAttrLen = len(setIxAttr)
         dt = dtree.build_tree_rec(setIxAttr, listInst, 0.0,-1)
+        self.assertEqual(cPrevSetIxAttrLen, len(setIxAttr),
+                         "setIxAttr changed size in build_tree_rec")
         self.assertTrue(dt.is_node(), "dt was not a node")
         self.assertEqual(dt.ixAttr, 0)
         dt0 = dt.dictChildren[0]
