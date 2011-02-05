@@ -164,7 +164,25 @@ class EntropyTest(unittest.TestCase):
         listInst = fxnGenTrue(cLenTrue) + fxnGenFalse(cLenFalse)
         fMajorityLabel = dtree.majority_label(listInst)
         self.assertEqual(fMajorityLabel, cLenTrue > cLenFalse)
-        
+
+    @repeated
+    def test_majority_label_weighted(self):
+        dblScale = 25.0
+        def gen_insts_for_label(fLabel):
+            dblW = random.random() * dblScale
+            listInst = []
+            dblInstWeight = 0.0
+            while dblInstWeight < dblW:
+                dblNextWeight = random.random()
+                listInst.append(dtree.Instance([],fLabel,dblNextWeight))
+                dblInstWeight += dblNextWeight
+            return listInst,dblInstWeight
+        listInstT,dblT = gen_insts_for_label(True)
+        listInstF,dblF = gen_insts_for_label(False)
+        listInstAll = listInstT + listInstF
+        random.shuffle(listInstAll)
+        fMajorityLabel = dtree.majority_label(listInstAll)
+        self.assertEqual(dblT > dblF, fMajorityLabel)        
 
 class ConstructionTest(unittest.TestCase):
     def check_dt(self,dtRoot,cMaxLevel):
