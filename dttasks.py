@@ -205,7 +205,7 @@ class BcwCompareBoostingParameters(tftask.ChartTask):
         for sName,cMaxLevel,cMaxRounds in [("Depth 1, 10 Rounds", 1, 10),
                                            ("Depth 2, 10 Rounds", 2, 10),
                                            ("Depth 1, 30 Rounds", 1, 30),
-                                           ("Depth 2, 10 Rounds", 2, 30)]:
+                                           ("Depth 2, 30 Rounds", 2, 30)]:
             fxnGen = self.build_fold_generator(cMaxLevel,cMaxRounds)
             fxnScore = lambda listInst: dtree.cv_score(fxnGen(listInst,cFold))
             listData = [fxnScore(listInstClean),fxnScore(listInstNoisy)]
