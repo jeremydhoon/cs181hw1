@@ -49,8 +49,7 @@ def separate_by_attribute(listInst, ixAttr):
     """Build a dictionary mapping attribute values to lists of instances.
     
     >>> separate_by_attribute([Instance([5,0],True),Instance([9,0],True)], 0)
-    {9: [Instance([9, 0], True)], 5: [Instance([5, 0], True)]}
-    """
+    {9: [Instance([9, 0], True)], 5: [Instance([5, 0], True)]}"""
     dictInst = {}
     for inst in listInst:
         cAttr = inst.listAttrs[ixAttr]
@@ -68,8 +67,7 @@ def compute_entropy_of_split(dictInst):
     >>> listInst1 = [Instance([],False,3.0), Instance([],True,0.0)]
     >>> dictInst = {0: listInst0, 1: listInst1}
     >>> compute_entropy_of_split(dictInst)
-    0.25
-    """
+    0.25"""
     def weight_and_entropy_for_partition(listPartition):
         dblWeight = dblTWeight = dblFWeight = 0.0
         for inst in listPartition:
@@ -105,8 +103,7 @@ def choose_split_attribute(iterableIxAttr, listInst, dblMinGain=0.0):
 
     >>> listInst = [Instance([0,0],False), Instance([0,1],True)]
     >>> choose_split_attribute([0,1], listInst)
-    (1, {0: [Instance([0, 0], False)], 1: [Instance([0, 1], True)]})
-    """
+    (1, {0: [Instance([0, 0], False)], 1: [Instance([0, 1], True)]})"""
     dblBestGain = dblMinGain
     ixBest = None
     dictBest = None
@@ -129,8 +126,7 @@ def check_for_common_label(listInst):
     True
     >>> check_for_common_label([Instance([],False), Instance([],False)])
     False
-    >>> check_for_common_label([Instance([],True), Instance([],False)])
-    """
+    >>> check_for_common_label([Instance([],True), Instance([],False)])"""
     fLabel = None
     for inst in listInst:
         if fLabel is None:
@@ -147,8 +143,7 @@ def majority_label(listInst):
     True
     >>> listInst =[Instance([],False),Instance([],True),Instance([],False)]
     >>> majority_label(listInst)
-    False
-    """
+    False"""
     dblT = dblF = 0.0
     for inst in listInst:
         dblW = inst.dblWeight
@@ -313,8 +308,7 @@ def weight_correct_incorrect(rslt):
     >>> listInstIncorrect = [Instance([],False,0.50)]
     >>> rslt = EvaluationResult(listInstCorrect, listInstIncorrect, None)
     >>> weight_correct_incorrect(rslt)
-    (0.25, 0.5)
-    """
+    (0.25, 0.5)"""
     fxnW = lambda listInst: sum([inst.dblWeight for inst in listInst],0.0)
     return fxnW(rslt.listInstCorrect),fxnW(rslt.listInstIncorrect)
 
@@ -350,8 +344,7 @@ def evaluate_classification(cvf):
 
     Evaluation results are built with
     EvaluationResult(listInstCorrect,listInstIncorrect,dt)
-    where dt is the classifier built with cvf.build().
-    """
+    where dt is the classifier built with cvf.build()."""
     dt = cvf.build()
     listInstCorrect = []
     listInstIncorrect = []
@@ -375,8 +368,7 @@ def check_folds(listInst, cFold, cMinFold):
     >>> check_folds([Instance([],False)], 1, 2)
     Traceback (most recent call last):
     ...
-    ValueError: Need at least 2 folds.
-    """
+    ValueError: Need at least 2 folds."""
     cLen = len(listInst)
     if cLen < cFold:
         raise ValueError("Cannot have more folds than instances")
@@ -388,8 +380,7 @@ def yield_cv_folds(listInst, cFold):
     into cFold folds.
 
     You may either return a list, or `yield` (http://goo.gl/gwOfM)
-    TreeFolds one at a time.
-    """
+    TreeFolds one at a time."""
     check_folds(listInst, cFold, 2)
     cFoldSize = len(listInst)/cFold
     for ixFold in xrange(cFold):
@@ -401,8 +392,7 @@ def yield_cv_folds(listInst, cFold):
 
 def cv_score(iterableFolds):
     """Determine the fraction (by weight) of correct instances across a number
-    of cross-validation folds.
-    """
+    of cross-validation folds."""
     dblCorrectTotal = dblWeightTotal = 0.0
     for cvf in iterableFolds:
         rslt = evaluate_classification(cvf)
@@ -419,8 +409,7 @@ def prune_tree(dt, listInst):
     become a leaf.
 
     The function does not return anything, and instead modifies the tree
-    in-place.
-    """
+    in-place."""
     if dt.is_leaf():
         return
     def score_tree():
@@ -446,8 +435,7 @@ def build_pruned_tree(listInstTrain, listInstValidate):
     """Build a pruned decision tree from a list of training instances, then
     prune the tree using a list of validation instances.
 
-    Return the pruned decision tree.
-    """
+    Return the pruned decision tree."""
     dt = build_tree(listInstTrain)
     prune_tree(dt,listInstValidate)
     return dt
@@ -491,8 +479,7 @@ def normalize_weights(listInst):
     >>> listInst = [Instance([],True,0.1), Instance([],False,0.3)]
     >>> normalize_weights(listInst)
     >>> print listInst
-    [Instance([], True, 0.25), Instance([], False, 0.75)]
-    """
+    [Instance([], True, 0.25), Instance([], False, 0.75)]"""
     dblTotalWeight = sum([inst.dblWeight for inst in listInst], 0.0)
     for inst in listInst:
         inst.dblWeight /= dblTotalWeight
@@ -505,8 +492,7 @@ def init_weights(listInst):
     >>> listInst = [Instance([],True,0.5), Instance([],True,0.25)]
     >>> init_weights(listInst)
     >>> print listInst
-    [Instance([], True, 0.50), Instance([], True, 0.50)]
-    """
+    [Instance([], True, 0.50), Instance([], True, 0.50)]"""
     for inst in listInst:
         inst.dblWeight = 1.0
     normalize_weights(listInst)
@@ -519,8 +505,7 @@ def classifier_error(rslt):
     >>> listInstIncorrect = [Instance([],True,0.45)]
     >>> rslt = EvaluationResult(listInstCorrect,listInstIncorrect,None)
     >>> classifier_error(rslt)
-    0.75
-    """
+    0.75"""
     dblCorrect,dblIncorrect = weight_correct_incorrect(rslt)
     return dblIncorrect/(dblCorrect+dblIncorrect)
 
@@ -563,8 +548,7 @@ def one_round_boost(listInst, cMaxLevel):
     - normalize all weights
     - return the EvaluationResult's oClassifier member, the classifier error,
       and the classifier weight in a 3-tuple
-    - remember to return early if the error is zero.
-    """
+    - remember to return early if the error is zero."""
     sf = StumpFold(listInst, cMaxLevel)    
     rslt = evaluate_classification(sf)
     dblError = classifier_error(rslt)
