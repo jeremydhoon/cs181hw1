@@ -352,10 +352,15 @@ class EvaluationTest(unittest.TestCase):
         def increase_values(inst):
             listIncreased = [c+cValues+1 for c in inst.listAttrs]
             return dtree.Instance(listIncreased, not fMajorityLabel)
+        def filter_unclassifiable(listInst):
+            dt = dtree.build_tree(listInst)
+            return [inst for inst in listInst
+                    if dtree.classify(dt,inst) == inst.fLabel]
         cValues = 2
         fxnGen = build_instance_generator(cValues=cValues)
-        listInst = fxnGen(10)
+        listInst = fxnGen(15)
         force_instance_consistency(listInst)
+        listInst = filter_unclassifiable(listInst)
         fMajorityLabel = dtree.majority_label(listInst)
         listInstImpossible = map(increase_values,listInst)
         listInstTest = listInst + listInstImpossible
