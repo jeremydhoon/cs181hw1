@@ -313,9 +313,12 @@ def weight_correct_incorrect(rslt):
     return fxnW(rslt.listInstCorrect),fxnW(rslt.listInstIncorrect)
 
 class CrossValidationFold(object):
+    """Abstract base class for all cross validaiton fold types."""
     def build(self):
+        # abstract method
         raise NotImplemented
     def classify(self, dt, inst):
+        # abstract method
         raise NotImplemented
     def check_insts(self, listInst):
         for inst in (listInst or []):
