@@ -184,6 +184,16 @@ class EntropyTest(unittest.TestCase):
         fMajorityLabel = dtree.majority_label(listInstAll)
         self.assertEqual(dblT > dblF, fMajorityLabel)        
 
+def check_dt_members(dt):
+    if dt.is_leaf() and dt.is_node():
+        return False, ("Tree is not clearly a leaf or node. Only one"
+                       " of fLabel and ixAttr should be not None.")
+    for cValue,dtChild in dt.dictChildren.iteritems():
+        fSuccess,sMsg = check_dt_members(dtChild)
+        if not fSuccess:
+            return fSuccess,sMsg
+    return True,None
+
 class ConstructionTest(unittest.TestCase):
     def check_dt(self,dtRoot,cMaxLevel):
         def down(dt,cLvl):
@@ -193,11 +203,16 @@ class ConstructionTest(unittest.TestCase):
                     down(dtChild,cLvl+1)
         down(dtRoot,0)
 
+    def assert_dt_members(self,dt):
+        fSuccess,sMsg = check_dt_members(dt)
+        self.assertTrue(fSuccess, sMsg)
+
     @repeated
     def test_build_tree_rec_leaf(self):
         fLabel = randbool()
         listInst = [dtree.Instance([],fLabel)]*random.randint(1,3)
         dt = dtree.build_tree_rec([],listInst,0.0,-1)
+        self.assert_dt_members(dt)
         self.assertTrue(dt.is_leaf(), "dt was not a leaf")
         self.assertEqual(dt.fLabel, fLabel)
 
@@ -211,6 +226,7 @@ class ConstructionTest(unittest.TestCase):
         setIxAttr = set(range(2))
         cPrevSetIxAttrLen = len(setIxAttr)
         dt = dtree.build_tree_rec(setIxAttr, listInst, 0.0,-1)
+        self.assert_dt_members(dt)
         self.assertEqual(cPrevSetIxAttrLen, len(setIxAttr),
                          "setIxAttr changed size in build_tree_rec")
         self.assertTrue(dt.is_node(), "dt was not a node")
@@ -227,6 +243,7 @@ class ConstructionTest(unittest.TestCase):
         listInst = fxnGen(100)
         cMaxLevel = random.randint(0,3)
         dt = dtree.build_tree(listInst, cMaxLevel=cMaxLevel)
+        self.assert_dt_members(dt)
         self.check_dt(dt,cMaxLevel)
 
     @repeated
@@ -239,6 +256,7 @@ class ConstructionTest(unittest.TestCase):
             fLabel = bool(listAttr[ixAttrImportant])
             listInst.append(dtree.Instance(listAttr,fLabel))
         dt = dtree.build_tree(listInst, dblMinGain=0.55)
+        self.assert_dt_members(dt)
         self.assertTrue(dt.is_node())
         self.check_dt(dt,1)        
 
