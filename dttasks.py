@@ -10,22 +10,31 @@ from tfutils import tftask
 import dtree
 
 def serialize_tree(dtRoot):
-    listPair = []
+    listSrcDestValue = []
     cNodes = 0
     def node_name(dt,ix):
         if dt.is_node():
-            return "Node %d (split on %d)" % (ix, dt.ixAttr)
+            return "Node %d (Split on %d)" % (ix,dt.ixAttr)
         return "Leaf %d (%s)" % (ix,str(dt.fLabel)[0])
     def down(dt,ixParent):
         if dt.is_leaf():
             return
         sParentName = node_name(dt,ixParent)
         for cValue,dtChild in dt.dictChildren.iteritems():
-            ixNode = len(listPair) + 1
-            listPair.append((sParentName,node_name(dtChild,ixNode)))
+            ixNode = len(listSrcDestValue) + 1
+            tplEdge = (sParentName,node_name(dtChild,ixNode),cValue)
+            listSrcDestValue.append(tplEdge)
             down(dtChild, ixNode)
     down(dtRoot,0)
-    return listPair
+
+    listColor = ["#FF0000", "#00FF00", "#0000FF", "#00FFFF", "#FF00FF",
+                 "#FFFF00", "#000000", "#FF8800", "#6600DD", "#000055"]
+    listEdge = []
+    cMinValue = min([tpl[2] for tpl in listSrcDestValue])
+    for src,dest,cValue in listSrcDestValue:
+        sColor = listColor[(cValue - cMinValue) % len(listColor)]
+        listEdge.append((src,dest,{"color":sColor}))
+    return listEdge
 
 def datadir(sPath):
     return path.join(path.dirname(__file__),sPath)
