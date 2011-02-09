@@ -8,6 +8,7 @@ adaptive boosting.
 """
 
 import math
+import random
 
 def log2(dbl):
     return math.log(dbl)/math.log(2.0) if dbl > 0.0 else 0.0
@@ -384,6 +385,7 @@ def yield_cv_folds(listInst, cFold):
 
     You may either return a list, or `yield` (http://goo.gl/gwOfM)
     TreeFolds one at a time."""
+    random.shuffle(listInst)
     check_folds(listInst, cFold, 2)
     cFoldSize = len(listInst)/cFold
     for ixFold in xrange(cFold):
@@ -457,6 +459,7 @@ def yield_cv_folds_with_validation(listInst, cFold):
     the list of instances listInst.
 
     You may either return a list or yield successive values."""
+    random.shuffle(listInst)
     check_folds(listInst, cFold, 3)
     cFoldSize = len(listInst)/cFold
     for ixFold in xrange(cFold-1):
