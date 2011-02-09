@@ -431,7 +431,7 @@ def prune_tree(dt, listInst):
                                  if inst.fLabel == dt.fDefaultLabel],0.0)
     dblTotalWeight = sum([inst.dblWeight for inst in listInst],0.0)
     dblPruneScore = dblDefaultClassWeight/dblTotalWeight
-    if dblPruneScore > dblBaseScore:
+    if dblPruneScore >= dblBaseScore:
         dt.convert_to_leaf()
         
 def build_pruned_tree(listInstTrain, listInstValidate):
